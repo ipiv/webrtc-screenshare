@@ -1,0 +1,74 @@
+/* Split the screen in half */
+body {
+    color: #fff
+}
+.split {
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+}
+
+/* Control the left side */
+.left {
+    width: 80%;
+    left: 0;
+    background-color: #111;
+}
+
+/* Control the right side */
+.right {
+    width: 20%;
+    right: 0;
+    background-color: #666;
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#messages {
+    padding: 20px 0 0 20px
+}
+.chat-message {
+    padding: 10px
+}
+
+#chatters {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+#chatters h4 {
+    margin: 5px 0 10px 0;
+}
+
+#chatters li {
+    float: left;
+    margin: 0px 15px 0 0;
+    padding: 10px;
+}
+
+#chatters li:hover {
+    cursor: pointer;
+    background-color: #111
+}
+
+#video-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+#video-wrapper video {
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,26 @@
+{
+  "name": "webrtc-multi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify src/main.js -o dist/bundle.js",
+    "dev": "watchify src/main.js -o dist/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipiv/webrtc-multi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ipiv/webrtc-multi/issues"
+  },
+  "homepage": "https://github.com/ipiv/webrtc-multi#readme",
+  "dependencies": {
+    "signalhub": "^4.9.0",
+    "watchify": "^3.11.1",
+    "webrtc-swarm": "^2.9.0"
+  }
+}

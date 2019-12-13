@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="split left">
+        <div class="centered">
+            <div id="connect-wrapper">
+                <div id="start-buttons">
+                    <button id="show-join-room">Join</button>
+                    <span>or</span>
+                    <button id="create-room">Create</button>
+                </div>
+                <div id="join-room-container" style="padding: 1rem;" hidden>
+                    <p id="error" hidden>Please enter the room ID you wish to join</p>
+                    
+                    <label for="room-id-input">Room ID</label>
+                    <input type="text" id="room-id-input" placeholder="abc12d">
+                    
+                    <button id="submit-room-id">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="chatroom" class="split right">
+        <ul id="chatters">
+            <h4>Currently in room:</h4>
+        </ul>
+        <ul id="messages">
+            
+        </ul>
+    </div>
+</body>
+<footer>
+    <script src="bundle.js"></script>
+</footer>
+</html>
