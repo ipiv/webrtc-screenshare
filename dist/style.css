@@ -72,3 +72,34 @@ body {
     height: 100%;
     width: 100%;
 }
+
+#chatters {
+    top: 0;
+    position: sticky;
+}
+
+#chat-messages-wrapper {
+    height: 90%;
+    overflow-y: auto;
+}
+
+#chat-messagebox-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#chat-messagebox {
+    width: 60%;
+    padding: 7px;
+    margin-left: 5px;
+}
+
+#chat-send-button {
+    vertical-align: top;
+    margin: 5px;
+}
+
+#messages {
+    list-style-type: none;
+}

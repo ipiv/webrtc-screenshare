@@ -28,7 +28,7 @@ const createRoomInfoEl = (roomId) => {
 
 const joinHub = async (roomId, id, initiator = false) => {
   hub.subscribe(roomId)
-    .on('data', (data) => {
+    .on('data', async (data) => {
       if (data.action == 'joined') {
         const messageEl = document.createElement('li')
         if (data.from == id) {
@@ -47,14 +47,13 @@ const joinHub = async (roomId, id, initiator = false) => {
           const newChatter = document.createElement('li')
           newChatter.setAttribute('id', 'chatter-'+data.from)
           newChatter.textContent = data.from == id ? data.from+'(You)' : data.from
-          newChatter.addEventListener('click', startScreenshare)
+          if (data.from !== id) newChatter.addEventListener('click', startScreenshare)
           chattersEl.append(newChatter)
         }
       } else if (data.action == 'startScreenShare') {
         if (data.from !== id) {
-          initializeScreenShare(true).then(peer =>{
-            hub.peer = peer
-          })
+          const peer = await initializeScreenShare(true)
+          hub.peer = peer
         }
       } else if (data.action == 'signal') {
         if (data.from !== id) {
@@ -62,7 +61,6 @@ const joinHub = async (roomId, id, initiator = false) => {
           hub.peer.signal(data.signalData)
         }
       }
-      // peer.signal(data)
     })
   hub.broadcast(roomId, {from: id, action:'joined'}, () => getConnected(roomId, id))
   hub.roomId = roomId
@@ -70,10 +68,7 @@ const joinHub = async (roomId, id, initiator = false) => {
   return
 }
 const getConnected = (roomId, id) => {
-  hub.broadcast(roomId, {from: id, action:'getConnected'}, (data) => {
-    console.log(data)
-  })
-  // console.log(hub)
+  hub.broadcast(roomId, {from: id, action:'getConnected'})
 }
 const joinRoomById = async () => {
   const roomId = document.getElementById('room-id-input').value
@@ -81,7 +76,6 @@ const joinRoomById = async () => {
   await joinHub(roomId, identifier)
   createRoomInfoEl(roomId)
   getConnected(roomId, identifier)
-  // const peer = await initPeer(roomId)
 }
 
 const showJoinContainer = () => {
@@ -103,11 +97,47 @@ const initializeScreenShare = async (initiator = false) => {
   })
   peer.on('connect', () => {
     console.log('Peer is connected')
+    const sendMessageButton = document.getElementById('chat-send-button')
+    const messageBox = document.getElementById('chat-messagebox')
+    sendMessageButton.parentNode.hidden = false
+    const sendMessage = () => {
+      const message = hub.identifier+': '+messageBox.value
+      peer.send(message)
+      const newMessage = document.createElement('li')
+      newMessage.textContent = 'You: '+messageBox.value
+      document.getElementById('messages').append(newMessage)
+      messageBox.value = ''
+      const messagesWrapper = document.getElementById('chat-messages-wrapper')
+      messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+    }
+    sendMessageButton.addEventListener('click', sendMessage)
+    messageBox.addEventListener('keyup', (e)=> {
+      if (e.which == 13 || e.keyCode == 13) {
+        sendMessage()
+    }
+    })
+    // peer.send('Hey from datachannel')
+  })
+  peer.on('data', data => {
+    // got a data channel message
+    const newMessage = document.createElement('li')
+    newMessage.textContent = data
+    const messagesEl = document.getElementById('messages')
+    
+    messagesEl.append(newMessage)
+    const messagesWrapper = document.getElementById('chat-messages-wrapper')
+    messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+  })
+  peer.on('close', () => {
+    console.log('Peer is closed')
+  })
+  peer.on('error', (err) => {
+    console.log('Peer error', err)
   })
   peer.on('stream', stream => {
-    const videoWrapper = document.createElement('div')
+    const videoWrapper = document.getElementById('video-wrapper') || document.createElement('div')
     videoWrapper.setAttribute('id', 'video-wrapper')
-    const videoEl = document.createElement('video')
+    const videoEl = document.querySelector('video') || document.createElement('video')
     if ('srcObject' in videoEl) {
       videoEl.srcObject = stream
     } else {
@@ -119,7 +149,6 @@ const initializeScreenShare = async (initiator = false) => {
     connectionWrapper.parentNode.append(videoWrapper)
     videoEl.play()
   })
-  // peer.identifier = randomId()
   return peer
 }
 

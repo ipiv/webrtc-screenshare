@@ -28,12 +28,16 @@
         </div>
     </div>
     <div id="chatroom" class="split right">
-        <ul id="chatters">
-            <h4>Currently in room:</h4>
-        </ul>
-        <ul id="messages">
-            
-        </ul>
+        <div id="chat-messages-wrapper">
+            <ul id="chatters">
+                <h4>Currently in room:</h4>
+            </ul>
+            <ul id="messages"></ul>
+            <div id="chat-messagebox-wrapper" hidden>
+                <textarea id="chat-messagebox" rows="1" placeholder="Send Message"></textarea>
+                <button id="chat-send-button">Send</button>
+            </div>
+        </div>
     </div>
 </body>
 <footer>
