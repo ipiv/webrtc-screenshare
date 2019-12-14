@@ -45,22 +45,30 @@ const joinHub = async (roomId, id, initiator = false) => {
           console.log('Other user joined:', data.from)
           if (hub.initiator) {
             if (!hub.peer) {
-              const peer = await initializePeer() 
+              const peer = await initializePeer()
               hub.peer = peer
-              hub.broadcast(roomId, {from: id, action:'startConnection'})
+              hub.broadcast(roomId, {
+                from: id,
+                action: 'startConnection'
+              })
             } else {
-              hub.broadcast(roomId, {from: id, action:'startConnection'})
+              hub.broadcast(roomId, {
+                from: id,
+                action: 'startConnection'
+              })
             }
           }
         } else {
           console.log('You joined:', data.from)
         }
-        
-      } else if (data.action == 'getConnected') {
-        hub.broadcast(roomId, {from: id, action:'connected'})
 
-      } else if (data.action == 'connected') {
-      } else if (data.action == 'startScreenShare') {
+      } else if (data.action == 'getConnected') {
+        hub.broadcast(roomId, {
+          from: id,
+          action: 'connected'
+        })
+
+      } else if (data.action == 'connected') {} else if (data.action == 'startScreenShare') {
         if (data.from !== id) {
           const peer = await initializeScreenShare(true)
           hub.peer = peer
@@ -79,17 +87,20 @@ const joinHub = async (roomId, id, initiator = false) => {
         }
       }
     })
-  hub.broadcast(roomId, {from: id, action:'joined'}, () => {})
+  hub.broadcast(roomId, {
+    from: id,
+    action: 'joined'
+  }, () => {})
   return
 }
 
 const addChattersEl = (chatterId) => {
   const chattersEl = document.getElementById('chatters')
-  const hasChatter = chattersEl.querySelector('#chatter-'+chatterId) != null;
-  if(!hasChatter) {
+  const hasChatter = chattersEl.querySelector('#chatter-' + chatterId) != null;
+  if (!hasChatter) {
     const newChatter = document.createElement('li')
-    newChatter.setAttribute('id', 'chatter-'+chatterId)
-    newChatter.textContent = chatterId == hub.identifier ? chatterId+'(You)' : chatterId
+    newChatter.setAttribute('id', 'chatter-' + chatterId)
+    newChatter.textContent = chatterId == hub.identifier ? chatterId + '(You)' : chatterId
     if (chatterId !== hub.identifier) newChatter.addEventListener('click', startScreenshare)
     chattersEl.append(newChatter)
   }
@@ -98,7 +109,10 @@ const addChattersEl = (chatterId) => {
 const getConnected = (roomId, id) => {
   hub.roomId = roomId
   hub.identifier = id
-  hub.broadcast(roomId, {from: id, action:'getConnected'})
+  hub.broadcast(roomId, {
+    from: id,
+    action: 'getConnected'
+  })
 }
 
 const joinRoomById = async () => {
@@ -113,21 +127,33 @@ const showJoinContainer = () => {
 }
 
 const startConnection = async () => {
-  const peer = await initializePeer() 
+  const peer = await initializePeer()
   hub.peer = peer
-  hub.broadcast(hub.roomId, {from: hub.identifier, action:'startConnection'})
+  hub.broadcast(hub.roomId, {
+    from: hub.identifier,
+    action: 'startConnection'
+  })
 }
 
 const startScreenshare = async () => {
-  const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: true
+  })
   if (!stream) return new Error('Failed to get stream')
   hub.peer.addStream(stream)
 }
 
 const initializePeer = async (initiator = false) => {
-  const peer = new Peer({ initiator: initiator })
+  const peer = new Peer({
+    initiator: initiator
+  })
   peer.on('signal', data => {
-    hub.broadcast(hub.roomId, {from: hub.identifier, action:'signal', signalData: data})
+    hub.broadcast(hub.roomId, {
+      from: hub.identifier,
+      action: 'signal',
+      signalData: data
+    })
   })
   peer.on('connect', () => {
     console.log('Peer is connected')
@@ -135,27 +161,27 @@ const initializePeer = async (initiator = false) => {
     const messageBox = document.getElementById('chat-messagebox')
     sendMessageButton.parentNode.hidden = false
     const sendMessage = () => {
-      const message = hub.identifier+': '+messageBox.value
+      const message = hub.identifier + ': ' + messageBox.value
       peer.send(message)
       const newMessage = document.createElement('li')
-      newMessage.textContent = 'You: '+messageBox.value
+      newMessage.textContent = 'You: ' + messageBox.value
       document.getElementById('messages').append(newMessage)
       messageBox.value = ''
       const messagesWrapper = document.getElementById('chat-messages-wrapper')
       messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
     }
     sendMessageButton.addEventListener('click', sendMessage)
-    messageBox.addEventListener('keyup', (e)=> {
+    messageBox.addEventListener('keyup', (e) => {
       if (e.which == 13 || e.keyCode == 13) {
         sendMessage()
-    }
+      }
     })
   })
   peer.on('data', data => {
     const newMessage = document.createElement('li')
     newMessage.textContent = data
     const messagesEl = document.getElementById('messages')
-    
+
     messagesEl.append(newMessage)
     const messagesWrapper = document.getElementById('chat-messages-wrapper')
     messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
