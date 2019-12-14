@@ -1,4 +1,3 @@
-const swarm = require('webrtc-swarm')
 const signalhub = require('signalhub')
 const Peer = require('simple-peer')
 
