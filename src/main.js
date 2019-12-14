@@ -10,7 +10,6 @@ const createRoom = async () => {
   const identifier = randomId()
   await joinHub(roomId, identifier, true)
   createRoomInfoEl(roomId)
-  // const peer = await initPeer(roomId, true)
 }
 
 const createRoomInfoEl = (roomId) => {
@@ -61,11 +60,6 @@ const joinHub = async (roomId, id, initiator = false) => {
         hub.broadcast(roomId, {from: id, action:'connected'})
 
       } else if (data.action == 'connected') {
-        // if(data.from !== id) {
-        //   const peer = await initializePeer() 
-        //   hub.peer = peer
-        //   peer && hub.broadcast(roomId, {from: id, action:'startConnection'})
-        // }
       } else if (data.action == 'startScreenShare') {
         if (data.from !== id) {
           const peer = await initializeScreenShare(true)
@@ -128,14 +122,9 @@ const startScreenshare = async () => {
   const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
   if (!stream) return new Error('Failed to get stream')
   hub.peer.addStream(stream)
-  // const peer = await initializeScreenShare()
-  // hub.peer = peer
-  // hub.broadcast(hub.roomId, {from: hub.identifier, action:'startScreenShare'})
 }
 
 const initializePeer = async (initiator = false) => {
-  // const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-  // if (!stream) return new Error('Failed to get stream')
   const peer = new Peer({ initiator: initiator })
   peer.on('signal', data => {
     hub.broadcast(hub.roomId, {from: hub.identifier, action:'signal', signalData: data})
@@ -161,10 +150,8 @@ const initializePeer = async (initiator = false) => {
         sendMessage()
     }
     })
-    // peer.send('Hey from datachannel')
   })
   peer.on('data', data => {
-    // got a data channel message
     const newMessage = document.createElement('li')
     newMessage.textContent = data
     const messagesEl = document.getElementById('messages')
@@ -212,48 +199,3 @@ const main = () => {
   createButton.addEventListener('click', createRoom)
 }
 main()
-
-
-
-// const initPeer = async (roomId, initiator = false) => {
-//   const peer = await initializeScreenShare(initiator)
-
-//   hub.subscribe(roomId)
-//     .on('data', (data) => {
-//       console.log('hub | ondata',data)
-//       if(data.from !== peer.identifier) {
-//         console.log('hub | ondata - not from me')
-//       }
-//       // peer.signal(data)
-//     })
-  
-//   peer.on('signal', (data) => {
-//     const id = peer.identifier
-//     console.log('peer | onsignal',data)
-//     hub.broadcast(roomId, {from:peer.identifier, signal:data})
-//   })
-
-//   return peer
-// }
-
-
-
-// hub.subscribe('my-channel')
-//   .on('data', function (message) {
-//     console.log('new message received', message)
-//   })
-
-// hub.broadcast('my-channel', {hello: 'world'})
-
-// const sw = swarm(hub)
-
-// sw.on('peer', function (peer, id) {
-//     console.log('connected to a new peer:', id)
-//     peer.on('data', data    )
-//     console.log('total peers:', sw.peers.length)
-// })
-
-// sw.on('disconnect', function (peer, id) {
-//     console.log('disconnected from a peer:', id)
-//     console.log('total peers:', sw.peers.length)
-// })
