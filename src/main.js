@@ -27,29 +27,45 @@ const createRoomInfoEl = (roomId) => {
 }
 
 const joinHub = async (roomId, id, initiator = false) => {
+  hub.roomId = roomId
+  hub.identifier = id
+  hub.initiator = initiator
   hub.subscribe(roomId)
     .on('data', async (data) => {
       if (data.action == 'joined') {
+        addChattersEl(data.from)
         const messageEl = document.createElement('li')
+        messageEl.textContent = data.from
         if (data.from == id) {
-          data.from += ' (You)'
+          messageEl.textContent += ' (You)'
         }
-        messageEl.textContent = data.from+' - Just joined'
+        messageEl.textContent += ' - Just joined'
         document.getElementById('messages').appendChild(messageEl)
+
+        if (data.from !== hub.identifier) {
+          console.log('Other user joined:', data.from)
+          if (hub.initiator) {
+            if (!hub.peer) {
+              const peer = await initializePeer() 
+              hub.peer = peer
+              hub.broadcast(roomId, {from: id, action:'startConnection'})
+            } else {
+              hub.broadcast(roomId, {from: id, action:'startConnection'})
+            }
+          }
+        } else {
+          console.log('You joined:', data.from)
+        }
         
       } else if (data.action == 'getConnected') {
         hub.broadcast(roomId, {from: id, action:'connected'})
 
       } else if (data.action == 'connected') {
-        const chattersEl = document.getElementById('chatters')
-        const hasChatter = chattersEl.querySelector('#chatter-'+data.from) != null;
-        if(!hasChatter) {
-          const newChatter = document.createElement('li')
-          newChatter.setAttribute('id', 'chatter-'+data.from)
-          newChatter.textContent = data.from == id ? data.from+'(You)' : data.from
-          if (data.from !== id) newChatter.addEventListener('click', startScreenshare)
-          chattersEl.append(newChatter)
-        }
+        // if(data.from !== id) {
+        //   const peer = await initializePeer() 
+        //   hub.peer = peer
+        //   peer && hub.broadcast(roomId, {from: id, action:'startConnection'})
+        // }
       } else if (data.action == 'startScreenShare') {
         if (data.from !== id) {
           const peer = await initializeScreenShare(true)
@@ -60,38 +76,67 @@ const joinHub = async (roomId, id, initiator = false) => {
           console.log('Got signalling data, sending to peer')
           hub.peer.signal(data.signalData)
         }
+      } else if (data.action == 'startConnection') {
+        if (data.from !== hub.identifier) {
+          addChattersEl(data.from)
+          const peer = await initializePeer(true)
+          hub.peer = peer
+          console.log('got startConnection request, peer ready', peer)
+        }
       }
     })
-  hub.broadcast(roomId, {from: id, action:'joined'}, () => getConnected(roomId, id))
-  hub.roomId = roomId
-  hub.identifier = id
+  hub.broadcast(roomId, {from: id, action:'joined'}, () => {})
   return
 }
+
+const addChattersEl = (chatterId) => {
+  const chattersEl = document.getElementById('chatters')
+  const hasChatter = chattersEl.querySelector('#chatter-'+chatterId) != null;
+  if(!hasChatter) {
+    const newChatter = document.createElement('li')
+    newChatter.setAttribute('id', 'chatter-'+chatterId)
+    newChatter.textContent = chatterId == hub.identifier ? chatterId+'(You)' : chatterId
+    if (chatterId !== hub.identifier) newChatter.addEventListener('click', startScreenshare)
+    chattersEl.append(newChatter)
+  }
+}
+
 const getConnected = (roomId, id) => {
+  hub.roomId = roomId
+  hub.identifier = id
   hub.broadcast(roomId, {from: id, action:'getConnected'})
 }
+
 const joinRoomById = async () => {
   const roomId = document.getElementById('room-id-input').value
   const identifier = randomId()
   await joinHub(roomId, identifier)
   createRoomInfoEl(roomId)
-  getConnected(roomId, identifier)
 }
 
 const showJoinContainer = () => {
   document.getElementById('join-room-container').hidden = false
 }
 
-const startScreenshare = async() => {
-  const peer = await initializeScreenShare()
+const startConnection = async () => {
+  const peer = await initializePeer() 
   hub.peer = peer
-  hub.broadcast(hub.roomId, {from: hub.identifier, action:'startScreenShare'})
+  hub.broadcast(hub.roomId, {from: hub.identifier, action:'startConnection'})
 }
 
-const initializeScreenShare = async (initiator = false) => {
+const startScreenshare = async () => {
   const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
   if (!stream) return new Error('Failed to get stream')
-  const peer = new Peer({ initiator, stream })
+  hub.peer.addStream(stream)
+  // const peer = await initializeScreenShare()
+  // hub.peer = peer
+  // hub.broadcast(hub.roomId, {from: hub.identifier, action:'startScreenShare'})
+}
+
+const initializePeer = async (initiator = false) => {
+  // const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+  // if (!stream) return new Error('Failed to get stream')
+  const peer = new Peer({ initiator: initiator })
   peer.on('signal', data => {
     hub.broadcast(hub.roomId, {from: hub.identifier, action:'signal', signalData: data})
   })
