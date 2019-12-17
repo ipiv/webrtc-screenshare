@@ -1,7 +1,7 @@
 const signalhub = require('signalhub')
 const Peer = require('simple-peer')
 
-const hub = signalhub('sharescreen', ['https://signalhubb.herokuapp.com/'])
+const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/'])
 
 const createRoom = async () => {
   console.log('Creating new channel...')
