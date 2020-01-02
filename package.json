@@ -8,7 +8,7 @@
     "build": "browserify src/main.js -o dist/bundle.js",
     "dev": "concurrently \"npm:server\" \"npm:watch\"",
     "watch": "watchify src/main.js -o dist/bundle.js",
-    "server": "http-server -a localhost -p 443 -S -C ../self-signedCert/servercert.pem -K ../self-signedCert/serverkey.pem"
+    "server": "http-server -c-1 -a localhost -p 443 -S -C ../self-signedCert/servercert.pem -K ../self-signedCert/serverkey.pem"
   },
   "repository": {
     "type": "git",
