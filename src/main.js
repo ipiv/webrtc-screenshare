@@ -30,60 +30,52 @@ const joinHub = async (roomId, id, initiator = false) => {
   hub.initiator = initiator
   hub.subscribe(roomId)
     .on('data', async (data) => {
-      if (data.action == 'joined') {
-        addChattersEl(data.from)
-        const messageEl = document.createElement('li')
-        messageEl.textContent = data.from
-        if (data.from == id) {
-          messageEl.textContent += ' (You)'
-        }
-        messageEl.textContent += ' - Just joined'
-        document.getElementById('messages').appendChild(messageEl)
-
-        if (data.from !== hub.identifier) {
-          console.log('Other user joined:', data.from)
-          if (hub.initiator) {
-            if (!hub.peer) {
-              const peer = await initializePeer()
-              hub.peer = peer
-              hub.broadcast(roomId, {
-                from: id,
-                action: 'startConnection'
-              })
-            } else {
-              hub.broadcast(roomId, {
-                from: id,
-                action: 'startConnection'
-              })
-            }
+      switch (data.action) {
+        case 'joined':
+          addChattersEl(data.from)
+          const messageEl = document.createElement('li')
+          messageEl.textContent += `${data.from}${data.from == id ? ' (You)' : ''} - Just joined`
+          document.getElementById('messages').appendChild(messageEl)
+          if (!hub.initiator) return;
+          if (!hub.peer) {
+            const peer = await initializePeer()
+            hub.peer = peer
+            hub.broadcast(roomId, {
+              from: id,
+              action: 'startConnection'
+            })
+          } else {
+            hub.broadcast(roomId, {
+              from: id,
+              action: 'startConnection'
+            })
           }
-        } else {
-          console.log('You joined:', data.from)
-        }
-
-      } else if (data.action == 'getConnected') {
-        hub.broadcast(roomId, {
-          from: id,
-          action: 'connected'
-        })
-
-      } else if (data.action == 'connected') {} else if (data.action == 'startScreenShare') {
-        if (data.from !== id) {
-          const peer = await initializeScreenShare(true)
-          hub.peer = peer
-        }
-      } else if (data.action == 'signal') {
-        if (data.from !== id) {
+          break;
+        case 'getConnected':
+          hub.broadcast(roomId, {
+            from: id,
+            action: 'connected'
+          })
+          break;
+        case 'startScreenShare':
+          if (data.from === id) return;
+          // const peer = await initializeScreenShare(true)
+          hub.peer = await initializeScreenShare(true)
+          break;
+        case 'signal':
+          if (data.from === id) return;
           console.log('Got signalling data, sending to peer')
           hub.peer.signal(data.signalData)
-        }
-      } else if (data.action == 'startConnection') {
-        if (data.from !== hub.identifier) {
+          break;
+        case 'startConnection':
+          if (data.from === hub.identifier) return;
           addChattersEl(data.from)
-          const peer = await initializePeer(true)
-          hub.peer = peer
+          // const peer = await initializePeer(true)
+          hub.peer = await initializePeer(true)
           console.log('got startConnection request, peer ready', peer)
-        }
+          break;
+        default:
+          break;
       }
     })
   hub.broadcast(roomId, {
@@ -135,12 +127,16 @@ const startConnection = async () => {
 }
 
 const startScreenshare = async () => {
-  const stream = await navigator.mediaDevices.getDisplayMedia({
-    video: true,
-    audio: true
-  })
-  if (!stream) return new Error('Failed to get stream')
-  hub.peer.addStream(stream)
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: true
+    })
+    if (!stream) throw new Error('Failed to get stream. is SSL configured?')
+    hub.peer.addStream(stream)
+  } catch (err) {
+    throw err
+  }
 }
 
 const initializePeer = async (initiator = false) => {
