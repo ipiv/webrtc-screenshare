@@ -58,7 +58,7 @@ body {
     padding: 10px;
 }
 
-#chatters li:hover {
+#chatters li:not(.client__self):hover {
     cursor: pointer;
     background-color: #111
 }
@@ -103,4 +103,33 @@ body {
 
 #messages {
     list-style-type: none;
+}
+
+#screenshare-wrapper {
+    border-radius: 10px;
+    padding: 0.5em 1em;
+    background-color: #171719;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#screenshare-wrapper:hover {
+    cursor: pointer;
+    background-color: #0a0a0a;
+}
+
+#screenshare-wrapper span {
+    margin-left: 5px
+}
+
+#share-status {
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none !important;
 }

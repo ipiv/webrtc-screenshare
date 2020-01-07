@@ -1,7 +1,9 @@
 const signalhub = require('signalhub')
 const Peer = require('simple-peer')
+const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/']);
 
-const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/'])
+const monitorIcon = require('./icons/monitor')
+const recordIcon = require('./icons/record')
 
 const createRoom = async () => {
   console.log('Creating new channel...')
@@ -57,11 +59,6 @@ const joinHub = async (roomId, id, initiator = false) => {
             action: 'connected'
           })
           break;
-        case 'startScreenShare':
-          if (data.from === id) return;
-          // const peer = await initializeScreenShare(true)
-          hub.peer = await initializeScreenShare(true)
-          break;
         case 'signal':
           if (data.from === id) return;
           console.log('Got signalling data, sending to peer')
@@ -70,9 +67,8 @@ const joinHub = async (roomId, id, initiator = false) => {
         case 'startConnection':
           if (data.from === hub.identifier) return;
           addChattersEl(data.from)
-          // const peer = await initializePeer(true)
           hub.peer = await initializePeer(true)
-          console.log('got startConnection request, peer ready', peer)
+          console.log('got startConnection request, peer ready')
           break;
         default:
           break;
@@ -91,10 +87,37 @@ const addChattersEl = (chatterId) => {
   if (!hasChatter) {
     const newChatter = document.createElement('li')
     newChatter.setAttribute('id', 'chatter-' + chatterId)
+    newChatter.classList += 'client'
     newChatter.textContent = chatterId == hub.identifier ? chatterId + '(You)' : chatterId
-    if (chatterId !== hub.identifier) newChatter.addEventListener('click', startScreenshare)
+    if (chatterId !== hub.identifier) {
+      newChatter.addEventListener('click', startScreenshare)
+      document.getElementById('connect-wrapper').appendChild(createScreenShareElement())
+    } else {
+      newChatter.className += ' client__self'
+    }
     chattersEl.append(newChatter)
   }
+}
+
+const createScreenShareElement = () => {
+  const screenShareEl = document.createElement('div')
+  screenShareEl.setAttribute('id', 'screenshare-wrapper')
+  screenShareEl.appendChild(monitorIcon)
+  const shareTextEl = document.createElement('span')
+  shareTextEl.textContent = ' Click to share your screen'
+  screenShareEl.appendChild(shareTextEl)
+  screenShareEl.addEventListener('click', startScreenshare)
+  
+  return screenShareEl
+}
+
+const createShareStatusElement = () => {
+  const statusEl = document.createElement('div')
+  statusEl.setAttribute('id', 'share-status')
+  statusEl.append(recordIcon)
+  statusEl.append(document.createTextNode('You are sharing your screen!'))
+
+  return statusEl
 }
 
 const getConnected = (roomId, id) => {
@@ -108,6 +131,7 @@ const getConnected = (roomId, id) => {
 
 const joinRoomById = async () => {
   const roomId = document.getElementById('room-id-input').value
+  if (!roomId) return;
   const identifier = randomId()
   await joinHub(roomId, identifier)
   createRoomInfoEl(roomId)
@@ -133,9 +157,24 @@ const startScreenshare = async () => {
       audio: true
     })
     if (!stream) throw new Error('Failed to get stream. is SSL configured?')
+
+    let statusEl = document.getElementById('share-status')
+    if (!statusEl) {
+      statusEl = createShareStatusElement()
+      document.getElementById('left-wrapper').prepend(statusEl)
+    } else {
+      screenShareEl.classList.remove('hidden')
+    }
+    const screenShareEl = document.getElementById('screenshare-wrapper')
+    screenShareEl.classList.add('hidden')
+
+    stream.getVideoTracks()[0].onended = (event) => {
+      statusEl.classList.add('hidden')
+      screenShareEl.classList.remove('hidden')
+    }
     hub.peer.addStream(stream)
   } catch (err) {
-    throw err
+    console.error(err)
   }
 }
 
@@ -156,6 +195,7 @@ const initializePeer = async (initiator = false) => {
     const messageBox = document.getElementById('chat-messagebox')
     sendMessageButton.parentNode.hidden = false
     const sendMessage = () => {
+      if (!messageBox.value) return;
       const message = hub.identifier + ': ' + messageBox.value
       peer.send(message)
       const newMessage = document.createElement('li')
@@ -166,8 +206,9 @@ const initializePeer = async (initiator = false) => {
       messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
     }
     sendMessageButton.addEventListener('click', sendMessage)
-    messageBox.addEventListener('keyup', (e) => {
+    messageBox.addEventListener('keydown', (e) => {
       if (e.which == 13 || e.keyCode == 13) {
+        e.preventDefault()
         sendMessage()
       }
     })
@@ -196,6 +237,7 @@ const initializePeer = async (initiator = false) => {
     } else {
       videoEl.src = window.URL.createObjectURL(stream) // for older browsers
     }
+    videoEl.controls = true
     videoWrapper.append(videoEl)
     const connectionWrapper = document.getElementById('connect-wrapper').parentNode
     connectionWrapper.hidden = true
@@ -215,6 +257,14 @@ const main = () => {
 
   const submitRoomButton = document.getElementById('submit-room-id')
   submitRoomButton.addEventListener('click', joinRoomById)
+  
+  const roomInputEl = document.getElementById('room-id-input')
+  roomInputEl.addEventListener('keydown', (e) => {
+    if (e.which == 13 || e.keyCode == 13) {
+      e.preventDefault()
+      joinRoomById()
+    }
+  })
 
   const createButton = document.getElementById('create-room')
   createButton.addEventListener('click', createRoom)
