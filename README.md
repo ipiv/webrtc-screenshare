@@ -9,8 +9,7 @@ For rough WIP  check out - git.io/webRTC
     - Or **"Click to share your screen"** button on the left
 6. You can specifiy a specific **application/window/tab** to share
 7. Optionally you can check **"Share Audio"** to also include your desktop audio
-<br/>
-<br/>
+
 #
 <br/>
 Screensharing is based on Mediadevices API, more on this API:  
