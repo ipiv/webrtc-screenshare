@@ -1,5 +1,5 @@
 {
-  "name": "webrtc-multi",
+  "name": "webrtc-screenshare",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ipiv/webrtc-multi.git"
+    "url": "git+https://github.com/ipiv/webrtc-screenshare.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ipiv/webrtc-multi/issues"
+    "url": "https://github.com/ipiv/webrtc-screenshare/issues"
   },
-  "homepage": "https://github.com/ipiv/webrtc-multi#readme",
+  "homepage": "https://github.com/ipiv/webrtc-screenshare#readme",
   "dependencies": {
     "signalhub": "^4.9.0",
     "simple-peer": "^9.6.2"
