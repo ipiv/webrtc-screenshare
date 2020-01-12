@@ -2166,7 +2166,7 @@ var eos = function(stream, opts, callback) {
 module.exports = eos;
 
 }).call(this,require('_process'))
-},{"_process":20,"once":17}],6:[function(require,module,exports){
+},{"_process":19,"once":16}],6:[function(require,module,exports){
 var stream = require('readable-stream')
 
 module.exports = function(url, opts) {
@@ -2210,7 +2210,7 @@ module.exports = function(url, opts) {
   return rs
 }
 
-},{"readable-stream":36}],7:[function(require,module,exports){
+},{"readable-stream":35}],7:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2932,170 +2932,6 @@ module.exports = Array.isArray || function (arr) {
 };
 
 },{}],15:[function(require,module,exports){
-/**
- * Helpers.
- */
-
-var s = 1000;
-var m = s * 60;
-var h = m * 60;
-var d = h * 24;
-var w = d * 7;
-var y = d * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} [options]
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
-
-module.exports = function(val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return parse(val);
-  } else if (type === 'number' && isFinite(val)) {
-    return options.long ? fmtLong(val) : fmtShort(val);
-  }
-  throw new Error(
-    'val is not a non-empty string or a valid number. val=' +
-      JSON.stringify(val)
-  );
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function parse(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
-  }
-  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
-    str
-  );
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * y;
-    case 'weeks':
-    case 'week':
-    case 'w':
-      return n * w;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtShort(ms) {
-  var msAbs = Math.abs(ms);
-  if (msAbs >= d) {
-    return Math.round(ms / d) + 'd';
-  }
-  if (msAbs >= h) {
-    return Math.round(ms / h) + 'h';
-  }
-  if (msAbs >= m) {
-    return Math.round(ms / m) + 'm';
-  }
-  if (msAbs >= s) {
-    return Math.round(ms / s) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtLong(ms) {
-  var msAbs = Math.abs(ms);
-  if (msAbs >= d) {
-    return plural(ms, msAbs, d, 'day');
-  }
-  if (msAbs >= h) {
-    return plural(ms, msAbs, h, 'hour');
-  }
-  if (msAbs >= m) {
-    return plural(ms, msAbs, m, 'minute');
-  }
-  if (msAbs >= s) {
-    return plural(ms, msAbs, s, 'second');
-  }
-  return ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function plural(ms, msAbs, n, name) {
-  var isPlural = msAbs >= n * 1.5;
-  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
-}
-
-},{}],16:[function(require,module,exports){
 (function (process,Buffer){
 var req = require('request')
 
@@ -3123,7 +2959,7 @@ function Nets (opts, cb) {
 }
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":20,"buffer":3,"request":75}],17:[function(require,module,exports){
+},{"_process":19,"buffer":3,"request":75}],16:[function(require,module,exports){
 var wrappy = require('wrappy')
 module.exports = wrappy(once)
 module.exports.strict = wrappy(onceStrict)
@@ -3167,7 +3003,7 @@ function onceStrict (fn) {
   return f
 }
 
-},{"wrappy":74}],18:[function(require,module,exports){
+},{"wrappy":74}],17:[function(require,module,exports){
 var trim = function(string) {
   return string.replace(/^\s+|\s+$/g, '');
 }
@@ -3201,7 +3037,7 @@ module.exports = function (headers) {
   return result
 }
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3250,7 +3086,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-},{"_process":20}],20:[function(require,module,exports){
+},{"_process":19}],19:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -3436,7 +3272,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var once = require('once')
 var eos = require('end-of-stream')
 var fs = require('fs') // we only need fs to get the ReadStream and WriteStream prototypes
@@ -3518,7 +3354,7 @@ var pump = function () {
 
 module.exports = pump
 
-},{"end-of-stream":5,"fs":2,"once":17}],22:[function(require,module,exports){
+},{"end-of-stream":5,"fs":2,"once":16}],21:[function(require,module,exports){
 let promise
 
 module.exports = typeof queueMicrotask === 'function'
@@ -3528,7 +3364,7 @@ module.exports = typeof queueMicrotask === 'function'
     .then(cb)
     .catch(err => setTimeout(() => { throw err }, 0))
 
-},{}],23:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (process,global){
 'use strict'
 
@@ -3582,10 +3418,10 @@ function randomBytes (size, cb) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":20,"safe-buffer":39}],24:[function(require,module,exports){
+},{"_process":19,"safe-buffer":38}],23:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":25}],25:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":24}],24:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3717,7 +3553,7 @@ Duplex.prototype._destroy = function (err, cb) {
 
   pna.nextTick(cb, err);
 };
-},{"./_stream_readable":27,"./_stream_writable":29,"core-util-is":4,"inherits":11,"process-nextick-args":19}],26:[function(require,module,exports){
+},{"./_stream_readable":26,"./_stream_writable":28,"core-util-is":4,"inherits":11,"process-nextick-args":18}],25:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3765,7 +3601,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":28,"core-util-is":4,"inherits":11}],27:[function(require,module,exports){
+},{"./_stream_transform":27,"core-util-is":4,"inherits":11}],26:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4787,7 +4623,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":25,"./internal/streams/BufferList":30,"./internal/streams/destroy":31,"./internal/streams/stream":32,"_process":20,"core-util-is":4,"events":7,"inherits":11,"isarray":14,"process-nextick-args":19,"safe-buffer":33,"string_decoder/":34,"util":2}],28:[function(require,module,exports){
+},{"./_stream_duplex":24,"./internal/streams/BufferList":29,"./internal/streams/destroy":30,"./internal/streams/stream":31,"_process":19,"core-util-is":4,"events":7,"inherits":11,"isarray":14,"process-nextick-args":18,"safe-buffer":32,"string_decoder/":33,"util":2}],27:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5002,7 +4838,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":25,"core-util-is":4,"inherits":11}],29:[function(require,module,exports){
+},{"./_stream_duplex":24,"core-util-is":4,"inherits":11}],28:[function(require,module,exports){
 (function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5692,7 +5528,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"./_stream_duplex":25,"./internal/streams/destroy":31,"./internal/streams/stream":32,"_process":20,"core-util-is":4,"inherits":11,"process-nextick-args":19,"safe-buffer":33,"timers":69,"util-deprecate":70}],30:[function(require,module,exports){
+},{"./_stream_duplex":24,"./internal/streams/destroy":30,"./internal/streams/stream":31,"_process":19,"core-util-is":4,"inherits":11,"process-nextick-args":18,"safe-buffer":32,"timers":69,"util-deprecate":70}],29:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5772,7 +5608,7 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
-},{"safe-buffer":33,"util":2}],31:[function(require,module,exports){
+},{"safe-buffer":32,"util":2}],30:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -5847,10 +5683,10 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":19}],32:[function(require,module,exports){
+},{"process-nextick-args":18}],31:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":7}],33:[function(require,module,exports){
+},{"events":7}],32:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -5914,7 +5750,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":3}],34:[function(require,module,exports){
+},{"buffer":3}],33:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6211,10 +6047,10 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":33}],35:[function(require,module,exports){
+},{"safe-buffer":32}],34:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":36}],36:[function(require,module,exports){
+},{"./readable":35}],35:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -6223,13 +6059,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":25,"./lib/_stream_passthrough.js":26,"./lib/_stream_readable.js":27,"./lib/_stream_transform.js":28,"./lib/_stream_writable.js":29}],37:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":24,"./lib/_stream_passthrough.js":25,"./lib/_stream_readable.js":26,"./lib/_stream_transform.js":27,"./lib/_stream_writable.js":28}],36:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":36}],38:[function(require,module,exports){
+},{"./readable":35}],37:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":29}],39:[function(require,module,exports){
+},{"./lib/_stream_writable.js":28}],38:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -6295,7 +6131,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":3}],40:[function(require,module,exports){
+},{"buffer":3}],39:[function(require,module,exports){
 (function (process){
 var events = require('events')
 var ess = require('event-source-stream')
@@ -6417,12 +6253,12 @@ function broadcast (app, url, channel, message, cb) {
 function noop () {}
 
 }).call(this,require('_process'))
-},{"_process":20,"event-source-stream":6,"events":7,"inherits":11,"nets":16,"pump":21,"through2":48}],41:[function(require,module,exports){
+},{"_process":19,"event-source-stream":6,"events":7,"inherits":11,"nets":15,"pump":20,"through2":47}],40:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],42:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6515,7 +6351,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":43,"./_stream_writable":45,"_process":20,"core-util-is":4,"inherits":11}],43:[function(require,module,exports){
+},{"./_stream_readable":42,"./_stream_writable":44,"_process":19,"core-util-is":4,"inherits":11}],42:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -7501,7 +7337,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":20,"buffer":3,"core-util-is":4,"events":7,"inherits":11,"isarray":41,"stream":67,"string_decoder/":47}],44:[function(require,module,exports){
+},{"_process":19,"buffer":3,"core-util-is":4,"events":7,"inherits":11,"isarray":40,"stream":67,"string_decoder/":46}],43:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7713,7 +7549,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":42,"core-util-is":4,"inherits":11}],45:[function(require,module,exports){
+},{"./_stream_duplex":41,"core-util-is":4,"inherits":11}],44:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8103,10 +7939,10 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":42,"_process":20,"buffer":3,"core-util-is":4,"inherits":11,"stream":67}],46:[function(require,module,exports){
+},{"./_stream_duplex":41,"_process":19,"buffer":3,"core-util-is":4,"inherits":11,"stream":67}],45:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":44}],47:[function(require,module,exports){
+},{"./lib/_stream_transform.js":43}],46:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8329,7 +8165,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":3}],48:[function(require,module,exports){
+},{"buffer":3}],47:[function(require,module,exports){
 (function (process){
 var Transform = require('readable-stream/transform')
   , inherits  = require('util').inherits
@@ -8429,7 +8265,7 @@ module.exports.obj = through2(function (options, transform, flush) {
 })
 
 }).call(this,require('_process'))
-},{"_process":20,"readable-stream/transform":46,"util":73,"xtend":76}],49:[function(require,module,exports){
+},{"_process":19,"readable-stream/transform":45,"util":73,"xtend":76}],48:[function(require,module,exports){
 (function (Buffer){
 var debug = require('debug')('simple-peer')
 var getBrowserRTC = require('get-browser-rtc')
@@ -9436,7 +9272,7 @@ Peer.channelConfig = {}
 module.exports = Peer
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":3,"debug":50,"get-browser-rtc":8,"queue-microtask":22,"randombytes":23,"readable-stream":66}],50:[function(require,module,exports){
+},{"buffer":3,"debug":49,"get-browser-rtc":8,"queue-microtask":21,"randombytes":22,"readable-stream":66}],49:[function(require,module,exports){
 (function (process){
 /* eslint-env browser */
 
@@ -9704,7 +9540,7 @@ formatters.j = function (v) {
 };
 
 }).call(this,require('_process'))
-},{"./common":51,"_process":20}],51:[function(require,module,exports){
+},{"./common":50,"_process":19}],50:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -9972,7 +9808,171 @@ function setup(env) {
 
 module.exports = setup;
 
-},{"ms":15}],52:[function(require,module,exports){
+},{"ms":51}],51:[function(require,module,exports){
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var w = d * 7;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return parse(val);
+  } else if (type === 'number' && isFinite(val)) {
+    return options.long ? fmtLong(val) : fmtShort(val);
+  }
+  throw new Error(
+    'val is not a non-empty string or a valid number. val=' +
+      JSON.stringify(val)
+  );
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+    str
+  );
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'weeks':
+    case 'week':
+    case 'w':
+      return n * w;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtShort(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return Math.round(ms / d) + 'd';
+  }
+  if (msAbs >= h) {
+    return Math.round(ms / h) + 'h';
+  }
+  if (msAbs >= m) {
+    return Math.round(ms / m) + 'm';
+  }
+  if (msAbs >= s) {
+    return Math.round(ms / s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtLong(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return plural(ms, msAbs, d, 'day');
+  }
+  if (msAbs >= h) {
+    return plural(ms, msAbs, h, 'hour');
+  }
+  if (msAbs >= m) {
+    return plural(ms, msAbs, m, 'minute');
+  }
+  if (msAbs >= s) {
+    return plural(ms, msAbs, s, 'second');
+  }
+  return ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, msAbs, n, name) {
+  var isPlural = msAbs >= n * 1.5;
+  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
+}
+
+},{}],52:[function(require,module,exports){
 'use strict';
 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
@@ -10122,7 +10122,7 @@ module.exports.emitExperimentalWarning = process.emitWarning
   : noop;
 
 }).call(this,require('_process'))
-},{"_process":20}],54:[function(require,module,exports){
+},{"_process":19}],54:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -10264,7 +10264,7 @@ Object.defineProperty(Duplex.prototype, 'destroyed', {
   }
 });
 }).call(this,require('_process'))
-},{"./_stream_readable":56,"./_stream_writable":58,"_process":20,"inherits":11}],55:[function(require,module,exports){
+},{"./_stream_readable":56,"./_stream_writable":58,"_process":19,"inherits":11}],55:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -11394,7 +11394,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../errors":52,"../experimentalWarning":53,"./_stream_duplex":54,"./internal/streams/async_iterator":59,"./internal/streams/buffer_list":60,"./internal/streams/destroy":61,"./internal/streams/state":64,"./internal/streams/stream":65,"_process":20,"buffer":3,"events":7,"inherits":11,"string_decoder/":68,"util":2}],57:[function(require,module,exports){
+},{"../errors":52,"../experimentalWarning":53,"./_stream_duplex":54,"./internal/streams/async_iterator":59,"./internal/streams/buffer_list":60,"./internal/streams/destroy":61,"./internal/streams/state":64,"./internal/streams/stream":65,"_process":19,"buffer":3,"events":7,"inherits":11,"string_decoder/":68,"util":2}],57:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -12282,7 +12282,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../errors":52,"./_stream_duplex":54,"./internal/streams/destroy":61,"./internal/streams/state":64,"./internal/streams/stream":65,"_process":20,"buffer":3,"inherits":11,"util-deprecate":70}],59:[function(require,module,exports){
+},{"../errors":52,"./_stream_duplex":54,"./internal/streams/destroy":61,"./internal/streams/state":64,"./internal/streams/stream":65,"_process":19,"buffer":3,"inherits":11,"util-deprecate":70}],59:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12492,7 +12492,7 @@ var createReadableStreamAsyncIterator = function createReadableStreamAsyncIterat
 
 module.exports = createReadableStreamAsyncIterator;
 }).call(this,require('_process'))
-},{"./end-of-stream":62,"_process":20}],60:[function(require,module,exports){
+},{"./end-of-stream":62,"_process":19}],60:[function(require,module,exports){
 'use strict';
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -12770,7 +12770,7 @@ module.exports = {
   undestroy: undestroy
 };
 }).call(this,require('_process'))
-},{"_process":20}],62:[function(require,module,exports){
+},{"_process":19}],62:[function(require,module,exports){
 // Ported from https://github.com/mafintosh/end-of-stream with
 // permission from the author, Mathias Buus (@mafintosh).
 'use strict';
@@ -13002,8 +13002,8 @@ module.exports = {
   getHighWaterMark: getHighWaterMark
 };
 },{"../../../errors":52}],65:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32,"events":7}],66:[function(require,module,exports){
+arguments[4][31][0].apply(exports,arguments)
+},{"dup":31,"events":7}],66:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -13143,9 +13143,9 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":7,"inherits":11,"readable-stream/duplex.js":24,"readable-stream/passthrough.js":35,"readable-stream/readable.js":36,"readable-stream/transform.js":37,"readable-stream/writable.js":38}],68:[function(require,module,exports){
-arguments[4][34][0].apply(exports,arguments)
-},{"dup":34,"safe-buffer":39}],69:[function(require,module,exports){
+},{"events":7,"inherits":11,"readable-stream/duplex.js":23,"readable-stream/passthrough.js":34,"readable-stream/readable.js":35,"readable-stream/transform.js":36,"readable-stream/writable.js":37}],68:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33,"safe-buffer":38}],69:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -13224,7 +13224,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":20,"timers":69}],70:[function(require,module,exports){
+},{"process/browser.js":19,"timers":69}],70:[function(require,module,exports){
 (function (global){
 
 /**
@@ -13917,7 +13917,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":72,"_process":20,"inherits":71}],74:[function(require,module,exports){
+},{"./support/isBuffer":72,"_process":19,"inherits":71}],74:[function(require,module,exports){
 // Returns a wrapper function that returns a wrapped callback
 // The wrapper function should do some stuff, and return a
 // presumably different callback function.
@@ -14201,7 +14201,7 @@ function getXml(xhr) {
 
 function noop() {}
 
-},{"global/window":9,"is-function":13,"parse-headers":18,"xtend":76}],76:[function(require,module,exports){
+},{"global/window":9,"is-function":13,"parse-headers":17,"xtend":76}],76:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -14249,7 +14249,7 @@ module.exports = loadSvg(recordPath, '#ff0000', '48')
 },{"../helpers/loadSvg":77}],80:[function(require,module,exports){
 const signalhub = require('signalhub')
 const Peer = require('simple-peer')
-const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/']);
+const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/'])
 
 const monitorIcon = require('./icons/monitor')
 const recordIcon = require('./icons/record')
@@ -14262,7 +14262,7 @@ const createRoom = async () => {
   createRoomInfoEl(roomId)
 }
 
-const createRoomInfoEl = (roomId) => {
+const createRoomInfoEl = roomId => {
   const roomInfoEl = document.createElement('div')
   const infoH2 = document.createElement('h2')
   const infoP = document.createElement('h2')
@@ -14279,60 +14279,63 @@ const joinHub = async (roomId, id, initiator = false) => {
   hub.roomId = roomId
   hub.identifier = id
   hub.initiator = initiator
-  hub.subscribe(roomId)
-    .on('data', async (data) => {
-      switch (data.action) {
-        case 'joined':
-          addChattersEl(data.from)
-          const messageEl = document.createElement('li')
-          messageEl.textContent += `${data.from}${data.from == id ? ' (You)' : ''} - Just joined`
-          document.getElementById('messages').appendChild(messageEl)
-          if (!hub.initiator) return;
-          if (!hub.peer) {
-            const peer = await initializePeer()
-            hub.peer = peer
-            hub.broadcast(roomId, {
-              from: id,
-              action: 'startConnection'
-            })
-          } else {
-            hub.broadcast(roomId, {
-              from: id,
-              action: 'startConnection'
-            })
-          }
-          break;
-        case 'getConnected':
+  hub.subscribe(roomId).on('data', async data => {
+    switch (data.action) {
+      case 'joined':
+        addChattersEl(data.from)
+        const messageEl = document.createElement('li')
+        messageEl.textContent += `${data.from}${data.from == id ? ' (You)' : ''} - Just joined`
+        document.getElementById('messages').appendChild(messageEl)
+        if (!hub.initiator) return
+        if (!hub.peer) {
+          const peer = await initializePeer()
+          hub.peer = peer
           hub.broadcast(roomId, {
             from: id,
-            action: 'connected'
+            action: 'startConnection'
           })
-          break;
-        case 'signal':
-          if (data.from === id) return;
-          console.log('Got signalling data, sending to peer')
-          hub.peer.signal(data.signalData)
-          break;
-        case 'startConnection':
-          if (data.from === hub.identifier) return;
-          addChattersEl(data.from)
-          hub.peer = await initializePeer(true)
-          console.log('got startConnection request, peer ready')
-          break;
-        default:
-          break;
-      }
-    })
-  hub.broadcast(roomId, {
-    from: id,
-    action: 'joined'
-  }, () => {})
+        } else {
+          hub.broadcast(roomId, {
+            from: id,
+            action: 'startConnection'
+          })
+        }
+        break
+      case 'getConnected':
+        hub.broadcast(roomId, {
+          from: id,
+          action: 'connected'
+        })
+        break
+      case 'signal':
+        if (data.from === id) return
+        console.log('Got signalling data, sending to peer')
+        hub.peer.signal(data.signalData)
+        break
+      case 'startConnection':
+        if (data.from === hub.identifier) return
+        addChattersEl(data.from)
+        hub.peer = await initializePeer(true)
+        console.log('got startConnection request, peer ready')
+        break
+      default:
+        break
+    }
+  })
+  hub.broadcast(
+    roomId,
+    {
+      from: id,
+      action: 'joined'
+    },
+    () => {}
+  )
   return
 }
 
-const addChattersEl = (chatterId) => {
+const addChattersEl = chatterId => {
   const chattersEl = document.getElementById('chatters')
-  const hasChatter = chattersEl.querySelector('#chatter-' + chatterId) != null;
+  const hasChatter = chattersEl.querySelector('#chatter-' + chatterId) != null
   if (!hasChatter) {
     const newChatter = document.createElement('li')
     newChatter.setAttribute('id', 'chatter-' + chatterId)
@@ -14356,7 +14359,7 @@ const createScreenShareElement = () => {
   shareTextEl.textContent = ' Click to share your screen'
   screenShareEl.appendChild(shareTextEl)
   screenShareEl.addEventListener('click', startScreenshare)
-  
+
   return screenShareEl
 }
 
@@ -14380,7 +14383,7 @@ const getConnected = (roomId, id) => {
 
 const joinRoomById = async () => {
   const roomId = document.getElementById('room-id-input').value
-  if (!roomId) return;
+  if (!roomId) return
   const identifier = randomId()
   await joinHub(roomId, identifier)
   createRoomInfoEl(roomId)
@@ -14417,7 +14420,7 @@ const startScreenshare = async () => {
     const screenShareEl = document.getElementById('screenshare-wrapper')
     screenShareEl.classList.add('hidden')
 
-    stream.getVideoTracks()[0].onended = (event) => {
+    stream.getVideoTracks()[0].onended = event => {
       statusEl.classList.add('hidden')
       screenShareEl.classList.remove('hidden')
     }
@@ -14444,7 +14447,7 @@ const initializePeer = async (initiator = false) => {
     const messageBox = document.getElementById('chat-messagebox')
     sendMessageButton.parentNode.hidden = false
     const sendMessage = () => {
-      if (!messageBox.value) return;
+      if (!messageBox.value) return
       const message = hub.identifier + ': ' + messageBox.value
       peer.send(message)
       const newMessage = document.createElement('li')
@@ -14452,10 +14455,10 @@ const initializePeer = async (initiator = false) => {
       document.getElementById('messages').append(newMessage)
       messageBox.value = ''
       const messagesWrapper = document.getElementById('chat-messages-wrapper')
-      messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+      messagesWrapper.scrollTop = messagesWrapper.scrollHeight
     }
     sendMessageButton.addEventListener('click', sendMessage)
-    messageBox.addEventListener('keydown', (e) => {
+    messageBox.addEventListener('keydown', e => {
       if (e.which == 13 || e.keyCode == 13) {
         e.preventDefault()
         sendMessage()
@@ -14469,12 +14472,12 @@ const initializePeer = async (initiator = false) => {
 
     messagesEl.append(newMessage)
     const messagesWrapper = document.getElementById('chat-messages-wrapper')
-    messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+    messagesWrapper.scrollTop = messagesWrapper.scrollHeight
   })
   peer.on('close', () => {
     console.log('Peer is closed')
   })
-  peer.on('error', (err) => {
+  peer.on('error', err => {
     console.log('Peer error', err)
   })
   peer.on('stream', stream => {
@@ -14497,7 +14500,7 @@ const initializePeer = async (initiator = false) => {
 }
 
 const randomId = (length = 6) => {
-  return Math.round((Math.random() * 36 ** length)).toString(36)
+  return Math.round(Math.random() * 36 ** length).toString(36)
 }
 
 const main = () => {
@@ -14506,9 +14509,9 @@ const main = () => {
 
   const submitRoomButton = document.getElementById('submit-room-id')
   submitRoomButton.addEventListener('click', joinRoomById)
-  
+
   const roomInputEl = document.getElementById('room-id-input')
-  roomInputEl.addEventListener('keydown', (e) => {
+  roomInputEl.addEventListener('keydown', e => {
     if (e.which == 13 || e.keyCode == 13) {
       e.preventDefault()
       joinRoomById()
@@ -14519,4 +14522,5 @@ const main = () => {
   createButton.addEventListener('click', createRoom)
 }
 main()
-},{"./icons/monitor":78,"./icons/record":79,"signalhub":40,"simple-peer":49}]},{},[80]);
+
+},{"./icons/monitor":78,"./icons/record":79,"signalhub":39,"simple-peer":48}]},{},[80]);
