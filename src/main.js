@@ -163,7 +163,7 @@ const startScreenshare = async () => {
       statusEl = createShareStatusElement()
       document.getElementById('left-wrapper').prepend(statusEl)
     } else {
-      screenShareEl.classList.remove('hidden')
+      statusEl.classList.remove('hidden')
     }
     const screenShareEl = document.getElementById('screenshare-wrapper')
     screenShareEl.classList.add('hidden')
