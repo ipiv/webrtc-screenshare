@@ -1,5 +1,5 @@
 # Peer to peer screenshare and chat
-For rough WIP  check out - https://git.io/WebRTC
+For rough WIP  check out - [git.io/WebRTC](https://git.io/WebRTC)
 1. Click on **Create** a room and copy the provided **ID**
 2. Open a new tab or from other pc click **Join** and paste the **ID** from previous step
 3. Connection is now **p2p** and no server is intercepting your messages or any data in that sense.
