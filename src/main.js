@@ -1,6 +1,7 @@
 const signalhub = require('signalhub')
 const Peer = require('simple-peer')
 
+// Change to your own Signalhub server or some other signalling service
 const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/'])
 const randomId = (length = 6) => {
   return Math.round(Math.random() * 36 ** length).toString(36)
@@ -143,7 +144,7 @@ const initializePeer = async (initiator = false) => {
   return peer
 }
 
-const joinHub = async (roomId, id, initiator = false) => {
+const joinHub = (roomId, id, initiator = false, cb) => {
   hub.roomId = roomId
   hub.identifier = id
   hub.initiator = initiator
@@ -184,7 +185,9 @@ const joinHub = async (roomId, id, initiator = false) => {
       from: id,
       action: 'joined'
     },
-    () => {}
+    (err) => {
+      return cb(err);
+    }
   )
 }
 
@@ -205,16 +208,20 @@ const createRoom = async () => {
   console.log('Creating new channel...')
   const roomId = randomId()
   const identifier = randomId()
-  await joinHub(roomId, identifier, true)
-  createRoomInfoEl(roomId)
+  joinHub(roomId, identifier, true, (err) => {
+    if (err) return console.error('Couldn\'t create channel:', err);
+    createRoomInfoEl(roomId)
+  })
 }
 
 const joinRoomById = async () => {
   const roomId = document.getElementById('room-id-input').value
   if (!roomId) return
   const identifier = randomId()
-  await joinHub(roomId, identifier)
-  createRoomInfoEl(roomId)
+  joinHub(roomId, identifier, true, (err) => {
+    if (err) return console.error('Couldn\'t join channel:', err);
+    createRoomInfoEl(roomId)
+  })
 }
 
 const showJoinContainer = () => {

@@ -11,6 +11,8 @@ For rough WIP  check out - [git.io/WebRTC](https://git.io/WebRTC)
 7. Optionally you can check **"Share Audio"** to also include your desktop audio
 
 #
+**Note: Please setup your own Signalhub or other signalling service**
+
 <br/>
 Screensharing is based on Mediadevices API, more on this API:  
 https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices
