@@ -14336,7 +14336,7 @@ const signalhub = require('signalhub')
 const Peer = require('simple-peer')
 
 // Change to your own Signalhub server or some other signalling service
-const hub = signalhub('RTChub', ['https://signalhubb.herokuapp.com/'])
+const hub = signalhub('RTChub', ['https://signalhubb2.herokuapp.com/'])
 const randomId = (length = 6) => {
   return Math.round(Math.random() * 36 ** length).toString(36)
 }
@@ -14475,6 +14475,7 @@ const initializePeer = async (initiator = false) => {
     connectionWrapper.parentNode.append(videoWrapper)
     videoEl.play()
   })
+  peer._debug = console.log
   return peer
 }
 
